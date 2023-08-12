@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   Post,
@@ -67,5 +68,28 @@ export class TestFileController {
       fieldname: x.fieldname,
       originalname: x.originalname,
     }));
+  }
+
+  @Post('/fileUploadSingleWithOtherJsonData')
+  @UseInterceptors(FileInterceptor('my_file'))
+  fileUploadSingleWithOtherJsonData(
+    @UploadedFile() my_file: Express.Multer.File,
+    @Body('my_json', {
+      transform: (value: string, metadata: any) => {
+        console.log('@metadata', metadata);
+        return JSON.parse(value);
+      },
+    })
+    my_json: { name: string },
+    // @Body('my_json') my_json: { name: string },
+  ) {
+    console.log('@my_file', my_file);
+    console.log('@my_json', my_json);
+    return {
+      my_file: {
+        originalname: my_file.originalname,
+      },
+      my_json,
+    };
   }
 }
