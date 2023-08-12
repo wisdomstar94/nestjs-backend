@@ -13,8 +13,8 @@ import {
   FileInterceptor,
 } from '@nestjs/platform-express';
 
-@Controller('test')
-export class TestController {
+@Controller('test/file')
+export class TestFileController {
   constructor(private configService: ConfigService) {}
 
   @Get('/')
@@ -64,6 +64,7 @@ export class TestController {
   fileUploadAny(@UploadedFiles() files: Array<Express.Multer.File>) {
     console.log('@files', files);
     return files.map((x) => ({
+      fieldname: x.fieldname,
       originalname: x.originalname,
     }));
   }
